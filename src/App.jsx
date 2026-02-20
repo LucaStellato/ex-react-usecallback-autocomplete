@@ -1,11 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
+import debounce from 'lodash.debounce'
+
+
 
 
 function App() {
   const [data, setData] = useState([])
   const [query, setQuery] = useState('')
-  useEffect(() => {
+
+  const eseguiFetch = useCallback(debounce((query) => {
     if (query.trim() == '') {
       setData([])
       return
@@ -15,6 +19,12 @@ function App() {
         setData(response.data)
 
       })
+  }, 300), [])
+
+  useEffect(() => {
+
+    eseguiFetch(query)
+
   }, [query])
   console.log(data)
 
